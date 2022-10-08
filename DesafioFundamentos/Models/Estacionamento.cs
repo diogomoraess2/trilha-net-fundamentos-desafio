@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace DesafioFundamentos.Models
 {
     public class Estacionamento
@@ -14,32 +16,90 @@ namespace DesafioFundamentos.Models
 
         public void AdicionarVeiculo()
         {
-            // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
-            // *IMPLEMENTE AQUI*
             Console.WriteLine("Digite a placa do veículo para estacionar:");
+
+            string placaVeiculo = Console.ReadLine().ToUpper().Replace("-", "").Trim();
+
+            bool resultado = ValidarPlaca(placaVeiculo);
+            string mensagem = resultado ? "é válida" : "não é válida";
+
+            if (!ValidarPlaca(placaVeiculo))
+            {
+                Console.WriteLine($"A placa informada {mensagem}...");
+                Console.WriteLine("Verifique a placa do veículo e tente novamente");
+            }
+            else if (veiculos.Any(x => x.ToUpper() == placaVeiculo.ToUpper()))
+            {
+                Console.WriteLine($"O Veiculo de placa {placaVeiculo} já está cadastrado");
+                Console.WriteLine("Verifique a placa do veículo e tente novamente");
+            }
+            else
+            {
+                veiculos.Add(placaVeiculo);
+                Console.WriteLine($"Veículo de placa {placaVeiculo} cadastrado com sucesso!");
+            }
         }
+
+        //Verifica se a placa digitada é uma placa válida
+
+        private static bool ValidarPlaca(string placa)
+        {
+            if (string.IsNullOrWhiteSpace(placa) || placa.Length > 8 || placa.Length < 7 || placa == null || placa =="" || char.IsLetter(placa, 3))
+            { 
+                return false; 
+            }
+
+            /*
+             *  Verifica se o caractere da posição 4 é uma letra, se sim, aplica a validação para o formato de placa do Mercosul,
+             *  senão, aplica a validação do formato de placa padrão.
+             */
+            if (char.IsLetter(placa, 4))
+            {
+                /*
+                 *  Verifica se a placa está no formato: três letras, um número, uma letra e dois números.
+                 */
+                var padraoMercosul = new Regex("[a-zA-Z]{3}[0-9]{1}[a-zA-Z]{1}[0-9]{2}");
+                return padraoMercosul.IsMatch(placa);
+            }
+            else
+            {
+                // Verifica se os 3 primeiros caracteres são letras e se os 4 últimos são números.
+                var padraoNormal = new Regex("[a-zA-Z]{3}[0-9]{4}");
+                return padraoNormal.IsMatch(placa);
+            }
+        }
+
+        // public bool ValidarPlaca(string placa)
+        // {
+        //     Regex regex = new Regex(@"^[a-zA-Z]{3}\-\d{4}[A-Za-z0-9][0-9]{2}$");
+
+        //     if (regex.IsMatch(placa) && placa != "")
+        //     {
+        //         return true;
+        //     }
+        //     else
+        //         return false;
+        // }
+
 
         public void RemoverVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para remover:");
-
-            // Pedir para o usuário digitar a placa e armazenar na variável placa
-            // *IMPLEMENTE AQUI*
             string placa = "";
+            placa = Console.ReadLine().ToUpper();
 
             // Verifica se o veículo existe
             if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
             {
                 Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
 
-                // TODO: Pedir para o usuário digitar a quantidade de horas que o veículo permaneceu estacionado,
-                // TODO: Realizar o seguinte cálculo: "precoInicial + precoPorHora * horas" para a variável valorTotal                
-                // *IMPLEMENTE AQUI*
                 int horas = 0;
-                decimal valorTotal = 0; 
+                horas = Int32.Parse(Console.ReadLine());
 
-                // TODO: Remover a placa digitada da lista de veículos
-                // *IMPLEMENTE AQUI*
+                decimal valorTotal = 0;
+                valorTotal = precoInicial + precoPorHora * horas;
+
+                veiculos.Remove(placa);
 
                 Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
             }
@@ -55,8 +115,13 @@ namespace DesafioFundamentos.Models
             if (veiculos.Any())
             {
                 Console.WriteLine("Os veículos estacionados são:");
-                // TODO: Realizar um laço de repetição, exibindo os veículos estacionados
-                // *IMPLEMENTE AQUI*
+                
+                int contador = 1;
+                foreach (string item in veiculos)
+                {
+                    Console.WriteLine($"Veículo {contador}: {item}");
+                    contador++;
+                }
             }
             else
             {
