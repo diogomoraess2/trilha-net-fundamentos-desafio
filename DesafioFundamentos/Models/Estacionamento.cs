@@ -43,9 +43,9 @@ namespace DesafioFundamentos.Models
         //Verifica se a placa digitada é uma placa válida
         private static bool ValidarPlaca(string placa)
         {
-            if (string.IsNullOrWhiteSpace(placa) || placa.Length > 8 || placa.Length < 7 || placa == null || placa =="" || char.IsLetter(placa, 3))
+            if (string.IsNullOrWhiteSpace(placa) || placa.Length > 8 || placa.Length < 7 || char.IsLetter(placa, 3))
             { 
-                return false; 
+                return false;
             }
 
             /*
@@ -67,7 +67,7 @@ namespace DesafioFundamentos.Models
                 return padraoNormal.IsMatch(placa);
             }
         }
-        
+
         public void RemoverVeiculo()
         {
             Console.WriteLine("Digite a placa do veículo para remover:");
